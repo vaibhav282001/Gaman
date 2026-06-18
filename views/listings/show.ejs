@@ -1,0 +1,586 @@
+<% layout('layouts/boilerplate') %>
+
+<!-- Script Context variables for Mapbox and client-side calculations -->
+<script>
+    const mapToken = "<%= mapToken %>";
+    const listing = <%- JSON.stringify(listing) %>;
+</script>
+
+<div class="row mt-4 mb-5">
+    <div class="col-12">
+        <!-- ========================================== -->
+        <!-- SECTION 1: HEADER & TITLE                  -->
+        <!-- ========================================== -->
+        <div class="show-page-header">
+            <h1 class="show-title-main" id="showListingTitle"><%= listing.title %></h1>
+            <div class="show-subtitle-row text-muted">
+                <span class="fw-bold text-dark"><i class="fa-solid fa-star text-danger me-1"></i>4.92 &bull; <span class="show-subtitle-link text-muted" id="reviewsScrollTrigger"><%= listing.reviews.length %> Reviews</span></span>
+                <span>&bull;</span>
+                <span class="fw-semibold text-dark"><i class="fa-solid fa-medal text-danger me-1"></i>Guest Favorite</span>
+                <span>&bull;</span>
+                <span class="show-subtitle-link" id="locationScrollTrigger"><%= listing.location %>, <%= listing.country %></span>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SECTION 2: GALLERY IMAGE GRID             -->
+        <!-- ========================================== -->
+        <!-- We dynamically map secondary photos for visual variety -->
+        <% 
+          let mainImage = listing.image.url || listing.image;
+          let secImages = [
+            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&q=80",
+            "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=800&q=80",
+            "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80",
+            "https://images.unsplash.com/photo-1552321554-5fecd8c7856a?w=800&q=80"
+          ];
+        %>
+        <div class="photo-gallery-grid-block mt-3">
+            <div class="gallery-grid-item-main" id="galleryImgTrigger0">
+                <img src="<%= mainImage %>" alt="Listing Primary Image">
+            </div>
+            <div class="gallery-grid-item-sub" id="galleryImgTrigger1">
+                <img src="<%= secImages[0] %>" alt="Listing Interior Image 1">
+            </div>
+            <div class="gallery-grid-item-sub" id="galleryImgTrigger2">
+                <img src="<%= secImages[1] %>" alt="Listing Interior Image 2">
+            </div>
+            <div class="gallery-grid-item-sub" id="galleryImgTrigger3">
+                <img src="<%= secImages[2] %>" alt="Listing Outdoor Image 1">
+            </div>
+            <div class="gallery-grid-item-sub" id="galleryImgTrigger4">
+                <img src="<%= secImages[3] %>" alt="Listing Bathroom Image 1">
+            </div>
+            <button class="view-photos-trigger-btn" id="openGalleryBtn">
+                <i class="fa-solid fa-grip-vertical me-2"></i>Show All Photos
+            </button>
+        </div>
+
+        <!-- Fullscreen Gallery Modal Overlay -->
+        <div class="fullscreen-gallery-modal" id="fullscreenGalleryModal">
+            <button class="gallery-modal-close" id="closeGalleryBtn">&times;</button>
+            <button class="gallery-modal-nav-arrow gallery-modal-nav-left" id="prevGalleryBtn"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="gallery-modal-slide">
+                <img src="<%= mainImage %>" id="galleryModalActiveImg" alt="Enlarged gallery photo">
+            </div>
+            <button class="gallery-modal-nav-arrow gallery-modal-nav-right" id="nextGalleryBtn"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SECTION 3: COLUMN SPLIT STRUCTURE          -->
+        <!-- ========================================== -->
+        <div class="show-columns-container">
+            
+            <!-- Left Side: Property details descriptions -->
+            <div class="details-column-left">
+                
+                <!-- Host Metadata specs -->
+                <div class="border-bottom pb-4">
+                    <h3 class="fw-bold mb-2">Hosted by <%= (listing.owner && listing.owner.username) ? listing.owner.username : 'Gaman Host' %></h3>
+                    <div class="specs-inline-row border-0 pb-0">
+                        <span>4 Guests</span>
+                        <span class="specs-inline-dot">&bull;</span>
+                        <span>2 Bedrooms</span>
+                        <span class="specs-inline-dot">&bull;</span>
+                        <span>2 Beds</span>
+                        <span class="specs-inline-dot">&bull;</span>
+                        <span>1 Bathroom</span>
+                    </div>
+                    <% if (currentUser && listing.owner && currentUser._id.equals(listing.owner._id)) { %>
+                        <div class="d-flex gap-2 mt-3">
+                            <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark rounded-pill px-4 btn-sm fw-bold">Edit Listing</a>
+                            <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST" class="mb-0">
+                                <button type="submit" class="btn btn-outline-danger rounded-pill px-4 btn-sm fw-bold">Delete Listing</button>
+                            </form>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Highlights Badges -->
+                <div class="border-bottom pb-4 d-flex flex-column gap-3">
+                    <div class="d-flex gap-3">
+                        <i class="fa-solid fa-door-open fs-4 text-dark mt-1"></i>
+                        <div>
+                            <h6 class="fw-bold mb-1">Self check-in</h6>
+                            <p class="text-muted mb-0" style="font-size: 0.88rem;">Check yourself in with the smart lock pad.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <i class="fa-regular fa-calendar-xmark fs-4 text-dark mt-1"></i>
+                        <div>
+                            <h6 class="fw-bold mb-1">Free cancellation for 48 hours</h6>
+                            <p class="text-muted mb-0" style="font-size: 0.88rem;">Get a full refund if you change your mind.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <i class="fa-solid fa-location-dot fs-4 text-dark mt-1"></i>
+                        <div>
+                            <h6 class="fw-bold mb-1">Great location</h6>
+                            <p class="text-muted mb-0" style="font-size: 0.88rem;">95% of recent guests gave the location a 5-star rating.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description Text -->
+                <div class="border-bottom pb-4">
+                    <h5 class="fw-bold mb-3">About this space</h5>
+                    <p class="text-secondary" style="line-height: 1.65;" id="listingDescText">
+                        <%= listing.description %>
+                    </p>
+                </div>
+
+                <!-- Section: Sleeping Arrangements -->
+                <div class="sleeping-arrangements-section">
+                    <h5 class="fw-bold mb-3">Where you'll sleep</h5>
+                    <div class="sleeping-cards-wrapper">
+                        <div class="bedroom-spec-card">
+                            <i class="fa-solid fa-bed bedroom-card-icon"></i>
+                            <div class="bedroom-card-title">Bedroom 1</div>
+                            <div class="bedroom-card-subtitle">1 King bed</div>
+                        </div>
+                        <div class="bedroom-spec-card">
+                            <i class="fa-solid fa-bed bedroom-card-icon"></i>
+                            <div class="bedroom-card-title">Bedroom 2</div>
+                            <div class="bedroom-card-subtitle">1 Queen bed</div>
+                        </div>
+                        <div class="bedroom-spec-card">
+                            <i class="fa-solid fa-couch bedroom-card-icon"></i>
+                            <div class="bedroom-card-title">Common Space</div>
+                            <div class="bedroom-card-subtitle">1 Sofa sleeper</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Amenities List -->
+                <div class="amenities-block-container">
+                    <h5 class="fw-bold mb-3">What this place offers</h5>
+                    <div class="amenities-grid-show">
+                        <div class="amenity-card-item">
+                            <i class="fa-solid fa-wifi"></i>
+                            <span>Fast wifi (250 Mbps)</span>
+                        </div>
+                        <div class="amenity-card-item">
+                            <i class="fa-solid fa-kitchen-set"></i>
+                            <span>Kitchen equipped for cooking</span>
+                        </div>
+                        <div class="amenity-card-item">
+                            <i class="fa-solid fa-car"></i>
+                            <span>Free parking on premises</span>
+                        </div>
+                        <div class="amenity-card-item">
+                            <i class="fa-solid fa-person-swimming"></i>
+                            <span>Private pool (open year-round)</span>
+                        </div>
+                        <div class="amenity-card-item">
+                            <i class="fa-solid fa-tv"></i>
+                            <span>55" HD Smart TV</span>
+                        </div>
+                        <div class="amenity-card-item">
+                            <i class="fa-solid fa-briefcase"></i>
+                            <span>Dedicated workspace desk</span>
+                        </div>
+                        <div class="amenity-card-item">
+                            <i class="fa-solid fa-snowflake"></i>
+                            <span>Central air conditioning</span>
+                        </div>
+                        <div class="amenity-card-item">
+                            <i class="fa-solid fa-soap"></i>
+                            <span>Washing machine & dryer</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Integrated Local Widgets (Weather + Cost) -->
+                <div class="border-bottom pb-4">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-wand-magic-sparkles text-danger me-2"></i>AI Destination Insights</h5>
+                    
+                    <div class="row g-3">
+                        <!-- Local weather Forecast widget -->
+                        <div class="col-sm-6">
+                            <div class="weather-widget-glass-card shadow-sm border">
+                                <div class="weather-primary-info">
+                                    <div>
+                                        <h6 class="fw-bold text-dark mb-1" id="weatherWidgetCityName"><%= listing.location %></h6>
+                                        <p class="text-muted small mb-0" id="weatherWidgetSky">Mostly Sunny</p>
+                                    </div>
+                                    <div class="weather-temp-degree" id="weatherWidgetTemp">28°C</div>
+                                </div>
+                                <div class="weather-3day-forecast-row">
+                                    <div class="forecast-day-box">
+                                        <div class="text-muted small">Tue</div>
+                                        <i class="fa-solid fa-cloud-sun text-secondary my-1"></i>
+                                        <div class="text-dark">29°/24°</div>
+                                    </div>
+                                    <div class="forecast-day-box">
+                                        <div class="text-muted small">Wed</div>
+                                        <i class="fa-solid fa-cloud-showers-heavy text-danger my-1"></i>
+                                        <div class="text-dark">26°/22°</div>
+                                    </div>
+                                    <div class="forecast-day-box">
+                                        <div class="text-muted small">Thu</div>
+                                        <i class="fa-solid fa-sun text-warning my-1"></i>
+                                        <div class="text-dark">30°/25°</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Local travel budget calculator -->
+                        <div class="col-sm-6">
+                            <div class="card p-3 shadow-sm border h-100" style="border-radius: var(--radius); background: var(--surface);">
+                                <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-calculator text-danger me-1"></i>Stay Cost Estimator</h6>
+                                <div class="small text-muted mb-2">Estimate staying budget for your trip.</div>
+                                <div class="d-flex flex-column gap-2">
+                                    <div>
+                                        <div class="d-flex justify-content-between text-dark" style="font-size: 0.75rem;">
+                                            <span>3-Night Stay Price</span>
+                                            <span class="fw-bold" id="widgetCostStay">₹0</span>
+                                        </div>
+                                        <div class="progress" style="height: 5px; margin-top: 3px;">
+                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 60%;"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="d-flex justify-content-between text-dark" style="font-size: 0.75rem;">
+                                            <span>Est. Food & Dining</span>
+                                            <span class="fw-bold" id="widgetCostFood">₹4,500</span>
+                                        </div>
+                                        <div class="progress" style="height: 5px; margin-top: 3px;">
+                                            <div class="progress-bar bg-dark" role="progressbar" style="width: 25%;"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="d-flex justify-content-between text-dark" style="font-size: 0.75rem;">
+                                            <span>Est. Transport</span>
+                                            <span class="fw-bold" id="widgetCostTransit">₹3,000</span>
+                                        </div>
+                                        <div class="progress" style="height: 5px; margin-top: 3px;">
+                                            <div class="progress-bar bg-secondary" role="progressbar" style="width: 15%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Side: Booking widget -->
+            <div>
+                <div class="booking-widget-card">
+                    <div class="booking-widget-header">
+                        <div class="booking-widget-price">
+                            ₹<%= listing.price.toLocaleString('en-IN') %>
+                            <span>/ night</span>
+                        </div>
+                        <div class="card-details-rating">
+                            <i class="fa-solid fa-star text-danger"></i>
+                            <span>4.92</span>
+                        </div>
+                    </div>
+
+                    <!-- Booking Input Fields -->
+                    <div class="booking-widget-inputs-block">
+                        <div class="booking-inputs-row-top">
+                            <div class="booking-input-item">
+                                <label for="bookingCheckIn">Check-In</label>
+                                <input type="date" id="bookingCheckIn" value="2026-06-20">
+                            </div>
+                            <div class="booking-input-item">
+                                <label for="bookingCheckOut">Check-Out</label>
+                                <input type="date" id="bookingCheckOut" value="2026-06-23">
+                            </div>
+                        </div>
+                        <div class="booking-input-item">
+                            <label for="bookingGuests">Guests</label>
+                            <select id="bookingGuests">
+                                <option value="1">1 Guest</option>
+                                <option value="2" selected>2 Guests</option>
+                                <option value="3">3 Guests</option>
+                                <option value="4">4 Guests</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Action Reserve CTA -->
+                    <button class="reserve-submit-btn" id="reserveWidgetBtn">
+                        Reserve Stay
+                    </button>
+                    
+                    <div class="text-center text-muted small mt-2">You won't be charged yet</div>
+
+                    <!-- Price Breakdowns -->
+                    <div class="widget-price-breakdown">
+                        <div class="breakdown-row">
+                            <span id="breakdownNightsLabel">₹<%= listing.price.toLocaleString('en-IN') %> x 3 nights</span>
+                            <span id="breakdownNightsVal">₹0</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Gaman Service Fee</span>
+                            <span id="breakdownServiceVal">₹1,200</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>18% GST Tax</span>
+                            <span id="breakdownTaxVal">₹0</span>
+                        </div>
+                        <div class="breakdown-row-total">
+                            <span>Total before taxes</span>
+                            <span id="breakdownTotalVal">₹0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Sticky Bottom Booking Bar (Mobile Only) -->
+        <div class="mobile-sticky-booking-bar" id="mobileStickyBookingBar">
+            <div class="mobile-booking-price-info">
+                <span>₹<%= listing.price.toLocaleString('en-IN') %> / night</span>
+                <p id="mobileBookingDateLabel">Jun 20 &ndash; 23</p>
+            </div>
+            <button class="mobile-reserve-trigger-btn" id="mobileReserveBtn">Reserve</button>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SECTION 4: REVIEWS BLOCK                   -->
+        <!-- ========================================== -->
+        <div class="reviews-section-block mt-4 mb-5" id="reviewsScrollTarget">
+            <div class="reviews-header-summary-row">
+                <div class="reviews-rating-rating">
+                    <i class="fa-solid fa-star text-danger"></i>
+                    <span>4.92 &bull; <%= listing.reviews.length %> Reviews</span>
+                </div>
+                <div class="reviews-verified-badge">
+                    <i class="fa-solid fa-shield-check"></i>
+                    <span>Verified Reviews System</span>
+                </div>
+            </div>
+
+            <!-- Score breakdown graphs -->
+            <div class="rating-breakdown-subgrid">
+                <div class="rating-breakdown-row">
+                    <label>Cleanliness</label>
+                    <div class="rating-progress-bar-container">
+                        <div class="rating-progress-fill" style="width: 96%;"></div>
+                    </div>
+                    <span class="rating-breakdown-score">4.8</span>
+                </div>
+                <div class="rating-breakdown-row">
+                    <label>Accuracy</label>
+                    <div class="rating-progress-bar-container">
+                        <div class="rating-progress-fill" style="width: 98%;"></div>
+                    </div>
+                    <span class="rating-breakdown-score">4.9</span>
+                </div>
+                <div class="rating-breakdown-row">
+                    <label>Communication</label>
+                    <div class="rating-progress-bar-container">
+                        <div class="rating-progress-fill" style="width: 96%;"></div>
+                    </div>
+                    <span class="rating-breakdown-score">4.8</span>
+                </div>
+                <div class="rating-breakdown-row">
+                    <label>Location</label>
+                    <div class="rating-progress-bar-container">
+                        <div class="rating-progress-fill" style="width: 100%;"></div>
+                    </div>
+                    <span class="rating-breakdown-score">5.0</span>
+                </div>
+                <div class="rating-breakdown-row">
+                    <label>Value</label>
+                    <div class="rating-progress-bar-container">
+                        <div class="rating-progress-fill" style="width: 94%;"></div>
+                    </div>
+                    <span class="rating-breakdown-score">4.7</span>
+                </div>
+                <div class="rating-breakdown-row">
+                    <label>Check-in</label>
+                    <div class="rating-progress-bar-container">
+                        <div class="rating-progress-fill" style="width: 98%;"></div>
+                    </div>
+                    <span class="rating-breakdown-score">4.9</span>
+                </div>
+            </div>
+
+            <!-- Review Search input -->
+            <div class="reviews-search-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" class="reviews-search-input" id="searchReviewInput" placeholder="Search verified review comments...">
+            </div>
+
+            <!-- Existing reviews collection -->
+            <div class="row row-cols-1 row-cols-md-2 g-4" id="reviewsGridContainer">
+                <% if (listing.reviews.length === 0) { %>
+                    <div class="col-12 py-3 text-muted text-center">
+                        <i class="fa-regular fa-message display-4 mb-2 d-block text-secondary"></i>
+                        <span>No reviews yet. Be the first to tell others about this stay!</span>
+                    </div>
+                <% } else { %>
+                    <% listing.reviews.forEach(review => { %>
+                        <div class="col review-card-element" data-comment="<%= review.comment.toLowerCase() %>">
+                            <div class="review-card-layout">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="review-card-author-row">
+                                        <div class="review-author-avatar">
+                                            <%= review.author.username.charAt(0).toUpperCase() %>
+                                        </div>
+                                        <div class="review-author-meta">
+                                            <h5>@<%= review.author.username %></h5>
+                                            <p>June 2026 &bull; Verified Stay</p>
+                                        </div>
+                                    </div>
+                                    <% if (currentUser && currentUser._id.equals(review.author._id)) { %>
+                                        <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" class="mb-0">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm border-0" title="Delete Review">
+                                                <i class="fa-regular fa-trash-can"></i>
+                                            </button>
+                                        </form>
+                                    <% } %>
+                                </div>
+                                <div class="starability-result mb-3" data-rating="<%= review.rating %>"></div>
+                                <p class="text-secondary small mb-0"><%= review.comment %></p>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } %>
+            </div>
+
+            <!-- Review Submit Form (Only if Logged In) -->
+            <% if (currentUser) { %>
+                <div class="card p-4 border shadow-sm mt-5" style="border-radius: var(--radius-lg);">
+                    <h4 class="fw-bold mb-3"><i class="fa-regular fa-pen-to-square text-danger me-2"></i>Add your experience</h4>
+                    <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-dark" style="font-size: 0.95rem;">Rating Star Score</label>
+                            <fieldset class="starability-slot border-0 p-0 m-0">
+                                <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                                <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                                <label for="first-rate1" title="Terrible">1 star</label>
+                                <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                                <label for="first-rate2" title="Not good">2 stars</label>
+                                <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                                <label for="first-rate3" title="Average">3 stars</label>
+                                <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                                <label for="first-rate4" title="Very good">4 stars</label>
+                                <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                                <label for="first-rate5" title="Amazing">5 stars</label>
+                            </fieldset>
+                        </div>
+                        <div class="mb-3 floating-label-block">
+                            <textarea id="comment" name="review[comment]" rows="4" placeholder=" " required></textarea>
+                            <label for="comment">Describe your visit here...</label>
+                            <div class="invalid-feedback">A review comment text is required before submission.</div>
+                        </div>
+                        <button type="submit" class="btn btn-dark rounded-pill px-4 fw-bold">Post Review</button>
+                    </form>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SECTION 5: GEOMETRY MAP & ATTRACTIONS      -->
+        <!-- ========================================== -->
+        <div class="reviews-section-block" id="locationScrollTarget">
+            <h4 class="fw-bold mb-4">Where you'll stay</h4>
+            <div id="map"></div>
+            
+            <h5 class="fw-bold text-dark mb-3">Nearby Attractions & POIs</h5>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div class="col">
+                    <div class="card p-3 border-0 bg-light rounded-3">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="fa-solid fa-utensils text-danger"></i>
+                            <span class="fw-bold text-dark" style="font-size: 0.88rem;">Local Dining</span>
+                        </div>
+                        <div class="text-secondary small">Cafe De Flora &bull; 1.2 km</div>
+                        <div class="text-secondary small">Bayside Grillhouse &bull; 2.5 km</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card p-3 border-0 bg-light rounded-3">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="fa-solid fa-tree text-danger"></i>
+                            <span class="fw-bold text-dark" style="font-size: 0.88rem;">Outdoor Parks</span>
+                        </div>
+                        <div class="text-secondary small">Forest Canopy Walkways &bull; 3.0 km</div>
+                        <div class="text-secondary small">Sunset View Point &bull; 0.8 km</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card p-3 border-0 bg-light rounded-3">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="fa-solid fa-bus text-danger"></i>
+                            <span class="fw-bold text-dark" style="font-size: 0.88rem;">Public Transit</span>
+                        </div>
+                        <div class="text-secondary small">City Junction bus depot &bull; 1.8 km</div>
+                        <div class="text-secondary small">West Train terminal &bull; 4.2 km</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SECTION 6: HOST DETAILED PROFILE           -->
+        <!-- ========================================== -->
+        <div class="host-profile-section mt-5 mb-5">
+            <h4 class="fw-bold text-dark">Meet your Host</h4>
+            <div class="host-badge-profile-card">
+                <div class="host-profile-image-box">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&q=80" alt="Host Profile Avatar">
+                    <div class="host-verified-shield-icon">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                </div>
+                <div class="host-badge-info-text">
+                    <h4><%= (listing.owner && listing.owner.username) ? listing.owner.username : 'Gaman Host' %></h4>
+                    <p>Hosting for 4 years &bull; Verified Identity</p>
+                    <div class="host-metric-row">
+                        <span class="text-danger"><i class="fa-regular fa-message me-1"></i>98% Response rate</span>
+                        <span class="text-muted"><i class="fa-solid fa-clock me-1"></i>Responds within an hour</span>
+                    </div>
+                    <div class="text-secondary small mt-3" style="max-width: 500px;">
+                        "Welcome to my curated property collection! I love designing cozy interiors, exploring local trails, and helping travelers get a premium local feel."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SECTION 7: THINGS TO KNOW                  -->
+        <!-- ========================================== -->
+        <div class="things-to-know-box pt-4">
+            <h4 class="fw-bold mb-4">Things to know</h4>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col">
+                    <h6 class="fw-bold text-dark">House Rules</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 text-muted small">
+                        <li><i class="fa-regular fa-clock me-2"></i>Check-in: After 3:00 PM</li>
+                        <li><i class="fa-regular fa-clock me-2"></i>Check-out: 11:00 AM</li>
+                        <li><i class="fa-solid fa-ban-smoking me-2"></i>No smoking inside</li>
+                        <li><i class="fa-solid fa-users-slash me-2"></i>No commercial events allowed</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h6 class="fw-bold text-dark">Safety & Property</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 text-muted small">
+                        <li><i class="fa-solid fa-shield-halved me-2"></i>Carbon monoxide alarm equipped</li>
+                        <li><i class="fa-solid fa-fire-extinguisher me-2"></i>Smoke detector installed</li>
+                        <li><i class="fa-solid fa-video me-2"></i>Exterior security cameras active</li>
+                        <li><i class="fa-solid fa-kit-medical me-2"></i>First aid emergency kit</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h6 class="fw-bold text-dark">Cancellation Policy</h6>
+                    <p class="text-muted small" style="line-height: 1.5;">
+                        Cancel within 48 hours of booking to get a full refund. Partial refunds are issued for cancellations completed at least 7 days before check-in date.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/js/map.js"></script>

@@ -1,0 +1,11 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="raw">
+    <div class="col-8 offset-2 mt-5">
+        <h1 class="text-center">Error: <%= err.statusCode %></h1>
+        <p class="text-center"><%= err.message %></p>
+        <div class="text-center">
+            <a href="/listings" class="btn btn-dark">Back to Listings</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,395 @@
+<% layout("/layouts/boilerplate") %>
+
+<!-- Inject listings and user data into client script context -->
+<script>
+  window.allListingsData = <%- JSON.stringify(allListings) %>;
+  window.currentUserId = "<%= currentUser ? currentUser._id : '' %>";
+  window.currentUsername = "<%= currentUser ? currentUser.username : '' %>";
+  window.currentUserWishlist = <%- currentUser && currentUser.wishlist ? JSON.stringify(currentUser.wishlist.filter(w => w).map(w => w._id || w)) : '[]' %>;
+  window.currentUserBookings = <%- currentUser && currentUser.bookings ? JSON.stringify(currentUser.bookings) : '[]' %>;
+</script>
+
+<!-- ========================================== -->
+<!-- 1. CATEGORY NAVIGATION BAR (Explore View Only) -->
+<!-- ========================================== -->
+<div class="category-bar-sticky" id="categorySliderBar">
+  <div class="container-fluid d-flex align-items-center justify-content-between gap-3">
+    <div class="category-scroller" id="categoryScroller">
+      <div class="category-item active" data-category="all">
+        <i class="fa-solid fa-fire"></i>
+        <span>Trending</span>
+      </div>
+      <div class="category-item" data-category="beach">
+        <i class="fa-solid fa-umbrella-beach"></i>
+        <span>Beach</span>
+      </div>
+      <div class="category-item" data-category="cabins">
+        <i class="fa-solid fa-house-chimney-user"></i>
+        <span>Cabins</span>
+      </div>
+      <div class="category-item" data-category="camping">
+        <i class="fa-solid fa-campground"></i>
+        <span>Camping</span>
+      </div>
+      <div class="category-item" data-category="castles">
+        <i class="fa-brands fa-fort-awesome"></i>
+        <span>Castles</span>
+      </div>
+      <div class="category-item" data-category="pools">
+        <i class="fa-solid fa-person-swimming"></i>
+        <span>Pools</span>
+      </div>
+      <div class="category-item" data-category="domes">
+        <i class="fa-solid fa-igloo"></i>
+        <span>Domes</span>
+      </div>
+      <div class="category-item" data-category="farms">
+        <i class="fa-solid fa-cow"></i>
+        <span>Farms</span>
+      </div>
+      <div class="category-item" data-category="arctic">
+        <i class="fa-regular fa-snowflake"></i>
+        <span>Arctic</span>
+      </div>
+      <div class="category-item" data-category="boats">
+        <i class="fa-solid fa-ship"></i>
+        <span>Boats</span>
+      </div>
+      <div class="category-item" data-category="rooms">
+        <i class="fa-solid fa-bed"></i>
+        <span>Rooms</span>
+      </div>
+      <div class="category-item" data-category="luxury">
+        <i class="fa-solid fa-gem"></i>
+        <span>Luxury</span>
+      </div>
+      <div class="category-item" data-category="views">
+        <i class="fa-solid fa-mountain-sun"></i>
+        <span>Amazing Views</span>
+      </div>
+    </div>
+
+    <!-- Taxes Switch Toggle -->
+    <div class="tax-toggle-box d-none d-lg-block">
+      <div class="form-check form-switch border border-secondary rounded-pill py-2 px-4 d-flex align-items-center gap-2" style="height: 38px;">
+        <input class="form-check-input" type="checkbox" role="switch" id="taxSwitchCheck">
+        <label class="form-check-label fw-bold text-dark" for="taxSwitchCheck" style="font-size: 0.8rem; cursor: pointer; white-space: nowrap; user-select: none;">Display total after taxes</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 2. EXPLORE VIEW (CAROUSELS & DISCOVERY)    -->
+<!-- ========================================== -->
+<div class="explore-sections-wrapper" id="exploreViewSection">
+  
+  <!-- Hero Banner Promo -->
+  <div class="hero-section d-flex align-items-center justify-content-center text-white mt-4 mb-5 p-5 rounded-4 shadow-sm" style="background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1600&auto=format&fit=crop'); background-size: cover; background-position: center; height: 35vh;">
+    <div class="text-center">
+      <h1 class="fw-extrabold display-5 font-heading" style="font-family: var(--font-main); font-weight: 900;">Explore without boundaries</h1>
+      <p class="fs-5 opacity-90 fw-medium">Find curated boutique villas, cottages, and cabins for your next journey.</p>
+    </div>
+  </div>
+
+  <!-- Section: Search Results Container (Hidden by default, shown when filtering/searching) -->
+  <div id="searchResultsSection" class="mb-5" style="display: none;">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <h3 class="fw-bold" id="searchResultTitle">Search Results</h3>
+      <button class="btn btn-outline-dark btn-sm rounded-pill px-3" id="clearSearchBtn">Clear Filters</button>
+    </div>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="searchResultsGrid"></div>
+  </div>
+
+  <!-- Themed Carousels Grid -->
+  <div id="themedCarouselsContainer">
+    <!-- Dynamic Carousels will be injected here via client-side script in script.js -->
+    <div class="text-center py-5">
+      <div class="spinner-border text-danger" role="status">
+        <span class="visually-hidden">Loading stays...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 3. GUEST DASHBOARD PANEL (Hidden by Default)-->
+<!-- ========================================== -->
+<div class="dashboard-panel-container mt-4" id="guestDashboardView" style="display: none;">
+  <div class="section-header-row mb-4">
+    <div>
+      <h2 class="fw-extrabold" style="font-weight: 800;">Welcome back, <%= currentUser ? currentUser.username : 'Traveler' %></h2>
+      <p class="text-muted">Manage your plans, reviews, and wishlisted listings in Gaman 2.0.</p>
+    </div>
+  </div>
+
+  <!-- Dashboard Navigation -->
+  <div class="dashboard-navigation-tabs-row" id="guestDashboardTabs">
+    <button class="dashboard-nav-tab-btn active" data-tab="trips">Upcoming Trips</button>
+    <button class="dashboard-nav-tab-btn" data-tab="past">Past Stays</button>
+    <button class="dashboard-nav-tab-btn" data-tab="wishlist">My Wishlists</button>
+    <button class="dashboard-nav-tab-btn" data-tab="searches">Saved Searches</button>
+  </div>
+
+  <!-- Dynamic Tab Contents -->
+  <div class="tab-content-wrapper py-3">
+    
+    <!-- Tab: Trips -->
+    <div class="dashboard-tab-panel active" id="guestTabTrips">
+      <div class="row row-cols-1 row-cols-md-2 g-4" id="guestTripsGrid">
+        <!-- Rendered via script.js -->
+      </div>
+    </div>
+
+    <!-- Tab: Past Stays -->
+    <div class="dashboard-tab-panel" id="guestTabPast" style="display: none;">
+      <div class="row row-cols-1 row-cols-md-3 g-4" id="guestPastStaysGrid">
+        <!-- Rendered via script.js -->
+      </div>
+    </div>
+
+    <!-- Tab: Wishlists -->
+    <div class="dashboard-tab-panel" id="guestTabWishlist" style="display: none;">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="guestWishlistGrid">
+        <!-- Wishlist Cards loaded from localStorage -->
+      </div>
+      <div class="text-center py-5 text-muted" id="guestWishlistEmpty" style="display: none;">
+        <i class="fa-regular fa-heart display-4 text-secondary mb-3"></i>
+        <h5>Create your first wishlist</h5>
+        <p>As you search, click the heart icon on any stay to save it here.</p>
+        <a href="/listings" class="btn btn-danger mt-3 rounded-pill px-4">Start exploring</a>
+      </div>
+    </div>
+
+    <!-- Tab: Saved Searches -->
+    <div class="dashboard-tab-panel" id="guestTabSearches" style="display: none;">
+      <div class="card border-0 shadow-sm p-4 rounded-3">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr class="table-light">
+                <th>Query</th>
+                <th>Dates</th>
+                <th>Guests</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="guestSavedSearchesList">
+              <!-- Rendered via script -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 4. HOST DASHBOARD PANEL (Hidden by Default) -->
+<!-- ========================================== -->
+<div class="dashboard-panel-container mt-4" id="hostDashboardView" style="display: none;">
+  <div class="section-header-row mb-4">
+    <div>
+      <h2 class="fw-extrabold" style="font-weight: 800;">Hosting Hub</h2>
+      <p class="text-muted">Analyze your earnings, check listings feedback, and manage guests bookings.</p>
+    </div>
+    <a href="/listings/new" class="btn btn-danger rounded-pill px-4 fw-bold">
+      <i class="fa-solid fa-plus me-2"></i>Create New Listing
+    </a>
+  </div>
+
+  <!-- Stats Indicators Row -->
+  <div class="dashboard-stats-grid">
+    <div class="stat-summary-card">
+      <div class="stat-card-label">Monthly Revenue</div>
+      <div class="stat-card-value" id="hostStatsRevenue">₹1,42,800</div>
+      <div class="stat-card-indicator positive">
+        <i class="fa-solid fa-arrow-trend-up"></i> +12% vs last month
+      </div>
+    </div>
+    <div class="stat-summary-card">
+      <div class="stat-card-label">Properties Listed</div>
+      <div class="stat-card-value" id="hostStatsCount">0</div>
+      <div class="stat-card-indicator">Active & Verified</div>
+    </div>
+    <div class="stat-summary-card">
+      <div class="stat-card-label">Active Bookings</div>
+      <div class="stat-card-value">4</div>
+      <div class="stat-card-indicator positive">
+        <i class="fa-regular fa-calendar-check"></i> Next arrival: Tomorrow
+      </div>
+    </div>
+    <div class="stat-summary-card">
+      <div class="stat-card-label">Hosting Rating</div>
+      <div class="stat-card-value">4.92 / 5</div>
+      <div class="stat-card-indicator positive">
+        <i class="fa-solid fa-award"></i> Guest Favorite Host
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts & Listings Grid -->
+  <div class="dashboard-visuals-panel">
+    <!-- SVG-based earnings charts -->
+    <div class="visual-card-wrapper">
+      <div class="visual-card-title">Earnings Summary (Past 6 Months)</div>
+      <div class="d-flex align-items-end justify-content-between gap-2 pt-3" style="height: 180px;" id="hostEarningsGraph">
+        <!-- SVG lines & graph elements rendered in script.js -->
+      </div>
+    </div>
+    
+    <!-- Quick Analytics -->
+    <div class="visual-card-wrapper d-flex flex-column justify-content-between">
+      <div class="visual-card-title">Traffic Channels</div>
+      <div class="d-flex flex-column gap-3">
+        <div>
+          <div class="d-flex justify-content-between font-weight-bold text-dark mb-1" style="font-size: 0.8rem;">
+            <span>Search Engines (SEO)</span>
+            <span>48%</span>
+          </div>
+          <div class="progress" style="height: 6px;">
+            <div class="progress-bar bg-danger" role="progressbar" style="width: 48%;"></div>
+          </div>
+        </div>
+        <div>
+          <div class="d-flex justify-content-between font-weight-bold text-dark mb-1" style="font-size: 0.8rem;">
+            <span>Social & Recommenders</span>
+            <span>32%</span>
+          </div>
+          <div class="progress" style="height: 6px;">
+            <div class="progress-bar bg-dark" role="progressbar" style="width: 32%;"></div>
+          </div>
+        </div>
+        <div>
+          <div class="d-flex justify-content-between font-weight-bold text-dark mb-1" style="font-size: 0.8rem;">
+            <span>Direct Visits</span>
+            <span>20%</span>
+          </div>
+          <div class="progress" style="height: 6px;">
+            <div class="progress-bar bg-secondary" role="progressbar" style="width: 20%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Listings Control Manager -->
+  <div class="visual-card-wrapper mb-5">
+    <div class="visual-card-title">My Properties</div>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr class="table-light">
+            <th>Image</th>
+            <th>Title</th>
+            <th>Location</th>
+            <th>Price</th>
+            <th>Reviews</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="hostPropertiesList">
+          <!-- Rendered dynamically -->
+        </tbody>
+      </table>
+    </div>
+    <div id="hostPropertiesEmpty" class="text-center py-4 text-muted" style="display: none;">
+      <i class="fa-solid fa-house-circle-exclamation display-4 mb-2"></i>
+      <h5>You don't own any properties listed yet</h5>
+      <p>Click "Create New Listing" to add your property to Gaman 2.0.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 5. AI TRAVEL ASSISTANT PANEL (Hidden)      -->
+<!-- ========================================== -->
+<div class="dashboard-panel-container mt-4" id="aiAssistantView" style="display: none;">
+  <div class="ai-assistant-glass-section glass-panel rounded-4">
+    <div class="ai-planner-hero-intro">
+      <h2 class="fw-extrabold"><i class="fa-solid fa-wand-magic-sparkles text-danger me-2"></i>AI Trip Architect</h2>
+      <p class="text-muted">Enter your preferences to receive a custom day-by-day itinerary and estimated budget instantly.</p>
+    </div>
+
+    <!-- AI Planner Input Fields -->
+    <div class="ai-planner-form-inputs">
+      <div class="ai-input-wrapper">
+        <label for="aiPlannerDest">Where are you going?</label>
+        <input type="text" id="aiPlannerDest" placeholder="e.g. Goa, Manali, Malibu" required>
+      </div>
+      <div class="ai-input-wrapper">
+        <label for="aiPlannerDays">Days</label>
+        <select id="aiPlannerDays">
+          <option value="1">1 Day</option>
+          <option value="3" selected>3 Days</option>
+          <option value="5">5 Days</option>
+          <option value="7">7 Days</option>
+        </select>
+      </div>
+      <div class="ai-input-wrapper d-flex align-items-center justify-content-between">
+        <div style="flex-grow: 1;">
+          <label for="aiPlannerBudget">Budget Class</label>
+          <select id="aiPlannerBudget">
+            <option value="budget">Economy (₹)</option>
+            <option value="moderate" selected>Moderate (₹₹)</option>
+            <option value="luxury">Luxury (₹₹₹)</option>
+          </select>
+        </div>
+        <button class="ai-submit-btn-glow" id="aiPlanItineraryBtn">Generate</button>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="ai-itinerary-loading-spinner" id="aiItinerarySpinner">
+      <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;"></div>
+      <h5 class="mt-3 text-secondary">Drafting custom schedules...</h5>
+    </div>
+
+    <!-- Response Panel -->
+    <div class="ai-itinerary-response-card" id="aiItineraryResponse">
+      
+      <!-- Itinerary details grid -->
+      <div class="row g-4">
+        <div class="col-md-7">
+          <div class="visual-card-wrapper h-100">
+            <div class="visual-card-title d-flex align-items-center gap-2">
+              <i class="fa-solid fa-calendar-days text-danger"></i>
+              <span id="aiItineraryTitle">Suggested Schedule</span>
+            </div>
+            <div class="day-itinerary-schedule-timeline" id="aiItineraryTimeline">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-5 d-flex flex-column gap-4">
+          <!-- Cost Breakdown Card -->
+          <div class="visual-card-wrapper">
+            <div class="visual-card-title d-flex align-items-center gap-2">
+              <i class="fa-solid fa-chart-pie text-danger"></i>
+              <span>Cost Estimator breakdown</span>
+            </div>
+            <div class="cost-estimator-panel" style="display: block;">
+              <div class="cost-bars-graph-block" id="aiCostEstimatorGrid">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Simulated Weather forecast -->
+          <div class="visual-card-wrapper">
+            <div class="visual-card-title d-flex align-items-center gap-2">
+              <i class="fa-solid fa-cloud-sun text-danger"></i>
+              <span>Local weather forecast</span>
+            </div>
+            <div class="weather-widget-glass-card border-0 p-0" id="aiWeatherForecastWidget">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

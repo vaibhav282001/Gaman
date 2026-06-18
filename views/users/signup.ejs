@@ -1,0 +1,69 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="auth-panel-wrapper">
+  <div class="auth-card-panel">
+    
+    <!-- Auth Title Header -->
+    <div class="auth-title-row">
+      <h2>Create Account</h2>
+      <p class="text-muted">Join Gaman 2.0 to search, save, and book premium vacation rentals.</p>
+    </div>
+
+    <!-- Signup Form -->
+    <form action="/signup" method="POST" novalidate class="needs-validation">
+      
+      <div class="floating-label-block">
+        <input type="text" id="username" name="username" placeholder=" " required autocomplete="username">
+        <label for="username">Choose a Username</label>
+        <div class="invalid-feedback">A unique username is required.</div>
+        <div class="valid-feedback">Username looks good!</div>
+      </div>
+
+      <div class="floating-label-block">
+        <input type="email" id="email" name="email" placeholder=" " required autocomplete="email">
+        <label for="email">Email Address</label>
+        <div class="invalid-feedback">Please provide a valid email address.</div>
+        <div class="valid-feedback">Email looks good!</div>
+      </div>
+
+      <div class="floating-label-block">
+        <input type="password" id="password" name="password" placeholder=" " required autocomplete="new-password">
+        <label for="password">Create Password</label>
+        <button type="button" class="password-eye-toggle" aria-label="Toggle Password Visibility">
+          <i class="fa-regular fa-eye"></i>
+        </button>
+        <div class="invalid-feedback">Please choose a secure password.</div>
+        <div class="valid-feedback">Password looks good!</div>
+      </div>
+
+      <button type="submit" class="btn btn-danger w-100 rounded-pill py-2 fw-bold mb-3 mt-2 hover-lift">Sign Up</button>
+
+    </form>
+
+    <!-- Social Signups Divider -->
+    <div class="or-divider-badge">or sign up with</div>
+
+    <!-- Social Buttons -->
+    <div class="social-logins-row">
+      <a href="/auth/google" class="social-login-btn text-decoration-none text-dark">
+        <i class="fa-brands fa-google text-danger"></i>
+        <span>Sign up with Google</span>
+      </a>
+      <button class="social-login-btn" onclick="alert('Apple Signup placeholder (mock action)')">
+        <i class="fa-brands fa-apple text-dark"></i>
+        <span>Sign up with Apple</span>
+      </button>
+      <button class="social-login-btn" onclick="alert('Facebook Signup placeholder (mock action)')">
+        <i class="fa-brands fa-facebook-f text-primary"></i>
+        <span>Sign up with Facebook</span>
+      </button>
+    </div>
+
+    <!-- Login Redirect -->
+    <div class="text-center mt-4 pt-3 border-top" style="font-size: 0.9rem;">
+      <span class="text-muted">Already have an account? </span>
+      <a href="/login" class="text-danger fw-bold hover-underline">Log In</a>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,84 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="auth-panel-wrapper">
+  <div class="auth-card-panel">
+    
+    <!-- Auth Title Header -->
+    <div class="auth-title-row">
+      <h2 id="authCardTitle">Welcome Back</h2>
+      <p class="text-muted">Sign in to check your upcoming bookings or manage your properties.</p>
+    </div>
+
+    <!-- Login Form -->
+    <form action="/login" method="POST" novalidate class="needs-validation">
+      
+      <!-- Primary Inputs block (Active by default) -->
+      <div id="loginInputsBlock">
+        <div class="floating-label-block">
+          <input type="text" id="username" name="username" placeholder=" " required autocomplete="username">
+          <label for="username">Username</label>
+          <div class="invalid-feedback">Username is required.</div>
+        </div>
+
+        <div class="floating-label-block">
+          <input type="password" id="password" name="password" placeholder=" " required autocomplete="current-password">
+          <label for="password">Password</label>
+          <button type="button" class="password-eye-toggle" aria-label="Toggle Password Visibility">
+            <i class="fa-regular fa-eye"></i>
+          </button>
+          <div class="invalid-feedback">Password is required.</div>
+        </div>
+
+        <!-- Forgot Password link -->
+        <div class="text-end mb-4" style="margin-top: -10px;">
+          <a href="#" id="forgotPasswordLink" class="text-danger small fw-bold">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-danger w-100 rounded-pill py-2 fw-bold mb-3 hover-lift">Log In</button>
+      </div>
+
+      <!-- Forgot Password Input Panel (Hidden by default, toggled via JS) -->
+      <div id="forgotInputsBlock" style="display: none;">
+        <p class="text-muted small mb-4">Enter your username or email address below, and we will email you instructions to reset your password.</p>
+        
+        <div class="floating-label-block">
+          <input type="email" id="forgotEmail" placeholder=" ">
+          <label for="forgotEmail">Email / Username</label>
+        </div>
+
+        <button type="button" class="btn btn-danger w-100 rounded-pill py-2 fw-bold mb-3 hover-lift" onclick="alert('Password reset instructions sent (mock action)')">Send Reset Link</button>
+        
+        <div class="text-center">
+          <a href="#" id="backToLoginLink" class="text-secondary small fw-bold"><i class="fa-solid fa-arrow-left me-2"></i>Back to login</a>
+        </div>
+      </div>
+
+    </form>
+
+    <!-- Social Login Divider -->
+    <div class="or-divider-badge">or log in with</div>
+
+    <!-- Social buttons -->
+    <div class="social-logins-row">
+      <a href="/auth/google" class="social-login-btn text-decoration-none text-dark">
+        <i class="fa-brands fa-google text-danger"></i>
+        <span>Continue with Google</span>
+      </a>
+      <button class="social-login-btn" onclick="alert('Apple Auth placeholder (mock action)')">
+        <i class="fa-brands fa-apple text-dark"></i>
+        <span>Continue with Apple</span>
+      </button>
+      <button class="social-login-btn" onclick="alert('Facebook Auth placeholder (mock action)')">
+        <i class="fa-brands fa-facebook-f text-primary"></i>
+        <span>Continue with Facebook</span>
+      </button>
+    </div>
+
+    <!-- Signup Redirect -->
+    <div class="text-center mt-4 pt-3 border-top" style="font-size: 0.9rem;">
+      <span class="text-muted">Don't have an account yet? </span>
+      <a href="/signup" class="text-danger fw-bold hover-underline">Sign Up</a>
+    </div>
+
+  </div>
+</div>

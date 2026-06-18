@@ -1,0 +1,137 @@
+<nav class="navbar navbar-airbnb sticky-top">
+  <div class="container-fluid px-md-5 d-flex align-items-center justify-content-between position-relative">
+    
+    <!-- Left: Gaman Logo -->
+    <a class="navbar-brand-logo" href="/listings">
+      <i class="fa-solid fa-compass"></i>
+      <span class="d-none d-sm-inline">gaman</span>
+    </a>
+
+    <!-- Center: Smart Search Pill (Interactive) -->
+    <div class="search-pill-container position-relative" id="searchPillContainer">
+      <div class="search-pill-wrapper" id="searchPillTrigger">
+        <span class="search-pill-text d-none d-sm-inline" id="searchPillText">Anywhere &bull; Any Week &bull; Add Guests</span>
+        <span class="search-pill-text d-inline d-sm-none" id="searchPillTextMobile">Search...</span>
+        <div class="search-pill-icon">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+      </div>
+
+      <!-- Expanded Search Dropdown Panel (Glassmorphic) -->
+      <div class="search-expanded-container glass-panel" id="searchExpandedPanel">
+        <form action="/listings" method="GET" class="search-expanded-grid" id="searchForm">
+          <div class="search-input-group">
+            <div class="search-input-label">Where</div>
+            <input type="text" name="search" placeholder="Search destinations" class="search-input-field" id="searchInputWhere" value="">
+          </div>
+          <div class="search-input-group">
+            <div class="search-input-label">Check in</div>
+            <input type="date" placeholder="Add dates" class="search-input-field" id="searchInputCheckIn">
+          </div>
+          <div class="search-input-group">
+            <div class="search-input-label">Check out</div>
+            <input type="date" placeholder="Add dates" class="search-input-field" id="searchInputCheckOut">
+          </div>
+          <div class="search-input-group d-flex align-items-center justify-content-between">
+            <div style="flex-grow: 1; min-width: 0; padding-right: 8px;">
+              <div class="search-input-label">Who</div>
+              <select class="search-input-field" id="searchInputGuests" style="cursor: pointer;">
+                <option value="1">1 guest</option>
+                <option value="2">2 guests</option>
+                <option value="3">3 guests</option>
+                <option value="4">4+ guests</option>
+              </select>
+            </div>
+            <button type="submit" class="search-action-btn">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <span>Search</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right: User Controls -->
+    <div class="nav-right-actions">
+      <a href="/listings/new" class="host-badge-btn d-none d-lg-inline-block">
+        Become a Host
+      </a>
+      
+      <!-- Notifications Bell Icon -->
+      <div class="dropdown d-none d-md-inline-block">
+        <button class="btn btn-link text-dark p-2 position-relative" id="notificationBtn" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 1.15rem; text-decoration: none;">
+          <i class="fa-regular fa-bell"></i>
+          <span class="position-absolute top-1 start-50 translate-middle p-1 bg-danger border border-light rounded-circle" id="notificationBadge" style="width: 8px; height: 8px; display: none;"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end p-3 shadow-lg border" id="notificationDropdownMenu" style="width: 320px; border-radius: var(--radius); z-index: 1200;">
+          <h6 class="fw-bold mb-3"><i class="fa-regular fa-bell text-danger me-2"></i>Notifications</h6>
+          <div id="notificationsList" style="max-height: 250px; overflow-y: auto; font-size: 0.82rem; color: #555;">
+            <!-- Rendered dynamically in script.js -->
+          </div>
+        </ul>
+      </div>
+
+      <!-- Profile Dropdown Menu -->
+      <div class="dropdown">
+        <div class="profile-dropdown-btn" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-solid fa-bars" style="font-size: 0.9rem; color: #555;"></i>
+          <% if (currentUser && currentUser.username) { %>
+            <div class="profile-avatar-circle bg-danger text-white">
+              <%= currentUser.username.charAt(0).toUpperCase() %>
+            </div>
+          <% } else { %>
+            <div class="profile-avatar-circle bg-secondary text-white">
+              <i class="fa-solid fa-user" style="font-size: 0.8rem;"></i>
+            </div>
+          <% } %>
+        </div>
+
+        <ul class="dropdown-menu dropdown-menu-end profile-dropdown-menu" aria-labelledby="profileDropdown">
+          <% if (!currentUser) { %>
+            <li><a class="dropdown-item fw-bold" href="/signup">Sign Up</a></li>
+            <li><a class="dropdown-item" href="/login">Log In</a></li>
+          <% } else { %>
+            <li><span class="dropdown-item-text text-muted fw-bold">Welcome, <%= currentUser.username %>!</span></li>
+            <li><a class="dropdown-item" href="/listings/new">Create Listing</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/listings?view=guest-dashboard">Guest Dashboard</a></li>
+            <li><a class="dropdown-item" href="/listings?view=guest-dashboard&tab=wishlist"><i class="fa-regular fa-heart text-danger me-2"></i>Favorite Listings</a></li>
+            <li><a class="dropdown-item" href="/listings?view=host-dashboard">Host Dashboard</a></li>
+          <% } %>
+          <li><a class="dropdown-item" href="/listings?view=ai-assistant"><i class="fa-solid fa-wand-magic-sparkles text-danger me-2"></i>AI Trip Planner</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/listings">Explore stays</a></li>
+          <% if (currentUser) { %>
+            <li><a class="dropdown-item text-danger" href="/logout">Log Out</a></li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Bottom Navigation Bar -->
+<div class="mobile-bottom-bar">
+  <div class="container d-flex align-items-center justify-content-around">
+    <a href="/listings" class="mobile-nav-item" id="mobileTabExplore">
+      <i class="fa-solid fa-compass"></i>
+      <span>Explore</span>
+    </a>
+    <a href="/listings?view=guest-dashboard&tab=wishlist" class="mobile-nav-item" id="mobileTabWishlist">
+      <i class="fa-regular fa-heart"></i>
+      <span>Wishlists</span>
+    </a>
+    <a href="/listings?view=guest-dashboard&tab=trips" class="mobile-nav-item" id="mobileTabTrips">
+      <i class="fa-solid fa-route"></i>
+      <span>Trips</span>
+    </a>
+    <a href="/listings?view=ai-assistant" class="mobile-nav-item" id="mobileTabAI">
+      <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <span>AI Planner</span>
+    </a>
+    <a href="<%= currentUser ? '/listings?view=host-dashboard' : '/login' %>" class="mobile-nav-item" id="mobileTabProfile">
+      <i class="fa-regular fa-user"></i>
+      <span><%= currentUser ? 'Host Panel' : 'Profile' %></span>
+    </a>
+  </div>
+</div>
