@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 // Configure session middleware
 const sessionOptions = {
-    secret: 'thisshouldbeabettersecret',
+    secret: process.env.CLOUD_API_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -178,6 +178,8 @@ main().then(() => {
 });
 
 // Connect to MongoDB
+const dbUrl = process.env.ATLASDB_URL;
+
 async function main() {
-    await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
+    await mongoose.connect(dbUrl);
 }
