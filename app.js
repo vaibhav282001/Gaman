@@ -4,7 +4,7 @@ if(process.env.NODE_ENV !== "production") {
 
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 const path = require('path');
 const methodOverride = require('method-override');
@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 // Configure session middleware
 const sessionOptions = {
-    secret: process.env.CLOUD_API_SECRET,
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -169,6 +169,12 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render("error.ejs", { err });
 });
 
+// Connect to MongoDB
+const dbUrl = process.env.ATLASDB_URL;
+
+async function main() {
+    await mongoose.connect(dbUrl);
+}
 
 // Call the main function to connect to MongoDB
 main().then(() => {
@@ -176,10 +182,3 @@ main().then(() => {
 }).catch(err => {
     console.error('Error connecting to MongoDB:', err);
 });
-
-// Connect to MongoDB
-const dbUrl = process.env.ATLASDB_URL;
-
-async function main() {
-    await mongoose.connect(dbUrl);
-}
