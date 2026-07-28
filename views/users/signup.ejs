@@ -1,7 +1,7 @@
 <% layout("/layouts/boilerplate") %>
 
 <div class="auth-panel-wrapper">
-  <div class="auth-card-panel">
+  <div class="auth-card-panel neo-box p-4" style="background: var(--neo-bg);">
     
     <!-- Auth Title Header -->
     <div class="auth-title-row">
@@ -13,30 +13,30 @@
     <form action="/signup" method="POST" novalidate class="needs-validation">
       
       <div class="floating-label-block">
-        <input type="text" id="username" name="username" placeholder=" " required autocomplete="username">
-        <label for="username">Choose a Username</label>
+        <input type="text" id="username" class="neo-input" name="username" placeholder=" " required autocomplete="username">
+        <label for="username" style="margin-left: 15px; margin-top: 2px;">Choose a Username</label>
         <div class="invalid-feedback">A unique username is required.</div>
         <div class="valid-feedback">Username looks good!</div>
       </div>
 
       <div class="floating-label-block">
-        <input type="email" id="email" name="email" placeholder=" " required autocomplete="email">
-        <label for="email">Email Address</label>
+        <input type="email" id="email" class="neo-input" name="email" placeholder=" " required autocomplete="email">
+        <label for="email" style="margin-left: 15px; margin-top: 2px;">Email Address</label>
         <div class="invalid-feedback">Please provide a valid email address.</div>
         <div class="valid-feedback">Email looks good!</div>
       </div>
 
       <div class="floating-label-block">
-        <input type="password" id="password" name="password" placeholder=" " required autocomplete="new-password">
-        <label for="password">Create Password</label>
-        <button type="button" class="password-eye-toggle" aria-label="Toggle Password Visibility">
+        <input type="password" id="password" class="neo-input" name="password" placeholder=" " required autocomplete="new-password">
+        <label for="password" style="margin-left: 15px; margin-top: 2px;">Create Password</label>
+        <button type="button" class="password-eye-toggle" aria-label="Toggle Password Visibility" style="right: 15px;">
           <i class="fa-regular fa-eye"></i>
         </button>
         <div class="invalid-feedback">Please choose a secure password.</div>
         <div class="valid-feedback">Password looks good!</div>
       </div>
 
-      <button type="submit" class="btn btn-danger w-100 rounded-pill py-2 fw-bold mb-3 mt-2 hover-lift">Sign Up</button>
+      <button type="submit" class="neo-button w-100 py-2 mb-3 mt-2 hover-lift">Sign Up</button>
 
     </form>
 
@@ -49,14 +49,7 @@
         <i class="fa-brands fa-google text-danger"></i>
         <span>Sign up with Google</span>
       </a>
-      <button class="social-login-btn" onclick="alert('Apple Signup placeholder (mock action)')">
-        <i class="fa-brands fa-apple text-dark"></i>
-        <span>Sign up with Apple</span>
-      </button>
-      <button class="social-login-btn" onclick="alert('Facebook Signup placeholder (mock action)')">
-        <i class="fa-brands fa-facebook-f text-primary"></i>
-        <span>Sign up with Facebook</span>
-      </button>
+
     </div>
 
     <!-- Login Redirect -->

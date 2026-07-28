@@ -1,13 +1,80 @@
-<% if (typeof success !== 'undefined' && success && success.length > 0) { %>
-    <div class="alert alert-success alert-dismissible fade show col-6 offset-3" role="alert">
-        <%= success[0] %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-<% } %>
+<style>
+.flash-container {
+    position: fixed;
+    top: 90px; /* Below navbar */
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    z-index: 1050;
+    width: 90%;
+    max-width: 450px;
+}
+.neo-flash {
+    background: var(--neo-bg);
+    border-radius: var(--radius-md);
+    box-shadow: 
+        10px 10px 20px var(--neo-shadow-dark),
+        -10px -10px 20px var(--neo-shadow-light);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    animation: slideDown 0.4s ease-out forwards;
+}
+.neo-flash-success {
+    border-left: 5px solid #28a745;
+}
+.neo-flash-error {
+    border-left: 5px solid #dc3545;
+}
+.neo-flash-close {
+    background: transparent;
+    border: none;
+    color: var(--neo-text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: 15px;
+    transition: color 0.2s;
+}
+.neo-flash-close:hover {
+    color: var(--neo-text-primary);
+}
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
 
-<% if (typeof error !== 'undefined' && error && error.length > 0) { %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <%= error[0] %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-<% } %>
+<div class="flash-container">
+    <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
+        <div class="neo-flash neo-flash-success alert-dismissible fade show" role="alert">
+            <div class="d-flex align-items-center" style="color: var(--neo-text-primary); font-weight: 500;">
+                <i class="fa-solid fa-circle-check text-success me-2 fs-5"></i>
+                <%= success[0] %>
+            </div>
+            <button type="button" class="neo-flash-close" data-bs-dismiss="alert"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+    <% } %>
+
+    <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+        <div class="neo-flash neo-flash-error alert-dismissible fade show" role="alert">
+            <div class="d-flex align-items-center" style="color: var(--neo-text-primary); font-weight: 500;">
+                <i class="fa-solid fa-circle-exclamation text-danger me-2 fs-5"></i>
+                <%= error[0] %>
+            </div>
+            <button type="button" class="neo-flash-close" data-bs-dismiss="alert"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+    <% } %>
+</div>
+
+<script>
+    setTimeout(function() {
+        const flashElements = document.querySelectorAll('.neo-flash');
+        flashElements.forEach(function(el) {
+            el.classList.remove('show');
+            setTimeout(() => el.remove(), 150); // wait for fade transition
+        });
+    }, 5000);
+</script>

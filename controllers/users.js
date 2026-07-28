@@ -1,7 +1,7 @@
 const User = require("../models/user.js");
 
 module.exports.renderSignupForm = (req, res) => {
-    res.render("users/signup.ejs");
+    res.render("users/signup.ejs", { hideNavbar: true });
 };
 
 module.exports.renderLoginForm = (req, res) => {
@@ -11,7 +11,7 @@ module.exports.renderLoginForm = (req, res) => {
             req.headers.referer || "/listings";
     }
 
-    res.render("users/login.ejs");
+    res.render("users/login.ejs", { hideNavbar: true });
 };
 
 module.exports.signup = async (req, res, next) => {
@@ -19,6 +19,10 @@ module.exports.signup = async (req, res, next) => {
     try {
 
         let { username, email, password } = req.body;
+        
+        if (username) {
+            username = username.trim();
+        }
 
         const newUser = new User({
             email,
@@ -91,4 +95,9 @@ module.exports.googleLoginCallback = (req, res) => {
     delete req.session.redirectUrl;
     req.flash("success", "Welcome back! Logged in with Google.");
     res.redirect(redirectUrl);
+};
+
+module.exports.renderProfile = async (req, res) => {
+    const user = await User.findById(req.user._id).populate('wishlist');
+    res.render("users/profile.ejs", { user });
 };

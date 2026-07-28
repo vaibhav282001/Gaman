@@ -132,10 +132,7 @@ app.use('/listings', listingRouter);
 app.use('/listings/:id/reviews', reviewRouter);
 app.use('/', userRouter);
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on  http://localhost:${port}/listings`);
-});
+
 
 // Catch-all route for handling 404 errors - page not found
 app.use((req, res, next) => {
@@ -181,6 +178,10 @@ async function main() {
 // Call the main function to connect to MongoDB
 main().then(() => {
     console.log('Connected to MongoDB');
+    // Start the server only after the DB connection is established
+    app.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}/listings`);
+    });
 }).catch(err => {
     console.error('Error connecting to MongoDB:', err);
 });

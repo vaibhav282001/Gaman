@@ -58,11 +58,15 @@ module.exports.createListing = async (req, res) => {
 
     newListing.owner = req.user._id;
 
-    if (req.file) {
+    if (req.files && req.files.length > 0) {
         newListing.image = {
-            url: req.file.path,
-            filename: req.file.filename
+            url: req.files[0].path,
+            filename: req.files[0].filename
         };
+        newListing.images = req.files.map(f => ({
+            url: f.path,
+            filename: f.filename
+        }));
     }
 
     newListing.geometry = response.body.features[0].geometry;
@@ -128,11 +132,15 @@ module.exports.updateListing = async (req, res) => {
         }
     }
 
-    if (req.file) {
+    if (req.files && req.files.length > 0) {
         updatedListing.image = {
-            url: req.file.path,
-            filename: req.file.filename
+            url: req.files[0].path,
+            filename: req.files[0].filename
         };
+        updatedListing.images = req.files.map(f => ({
+            url: f.path,
+            filename: f.filename
+        }));
     }
 
     await updatedListing.save();

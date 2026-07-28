@@ -18,7 +18,7 @@ router
     // 📌 GET ALL LISTINGS
     .get(wrapAsync(listingController.index))
     // 📌 CREATE LISTING
-    .post(isLoggedIn,upload.single('listing[image]'), validateListing , wrapAsync(listingController.createListing));
+    .post(isLoggedIn,upload.array('listing[image]', 5), validateListing , wrapAsync(listingController.createListing));
 
 // 📌 NEW LISTING FORM
 router.get("/new", isLoggedIn, listingController.renderNewForm);
@@ -28,7 +28,7 @@ router
     // 📌 SHOW SINGLE LISTING
     .get(wrapAsync(listingController.showListing))
     // 📌 UPDATE LISTING
-    .put(isLoggedIn, isOwner,upload.single('listing[image]'), validateListing, wrapAsync(listingController.updateListing))
+    .put(isLoggedIn, isOwner,upload.array('listing[image]', 5), validateListing, wrapAsync(listingController.updateListing))
     // 📌 DELETE LISTING
     .delete(isLoggedIn, isOwner, wrapAsync(listingController.destroyListing));
 

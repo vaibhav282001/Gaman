@@ -19,6 +19,7 @@
     <!-- Custom CSS -->
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/rating.css" rel="stylesheet">
+    <link href="/css/neon.css" rel="stylesheet">
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.24.0/mapbox-gl.css" rel="stylesheet">
     
     <!-- Mapbox GL JS -->
@@ -28,11 +29,16 @@
     <script>
       window.currentUserId = "<%= locals.currentUser ? currentUser._id : '' %>";
       window.currentUsername = "<%= locals.currentUser ? currentUser.username : '' %>";
+      
+      // Theme initialization (Forced Light Mode)
+      document.documentElement.setAttribute('data-theme', 'light');
     </script>
 </head>
 <body>
     
-    <%- include('../includes/navbar') %>
+    <% if (!locals.hideNavbar) { %>
+        <%- include('../includes/navbar') %>
+    <% } %>
 
     <!-- Unified Toast Manager Container -->
     <div class="toasts-manager-container" id="toastManagerContainer"></div>

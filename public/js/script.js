@@ -199,30 +199,30 @@
 
     return `
       <div class="card-item-col" data-id="${listing._id}">
-        <div class="listing-card-modern hover-lift">
+        <div class="neo-box listing-card-modern hover-lift">
           <div class="card-media-slider">
             <a href="/listings/${listing._id}">
               <img src="${imageUrl}" class="img-zoom-child" alt="Listing Stay Image" loading="lazy">
             </a>
             <div class="card-media-overlay-actions">
               <span class="favorite-badge-pill"><i class="fa-solid fa-medal text-danger me-1"></i>Guest Favorite</span>
-              <button class="wishlist-heart-btn ${isWishlisted ? 'active' : ''}" data-id="${listing._id}">
+              <button class="wishlist-heart-btn ${isWishlisted ? 'active' : ''}" data-id="${listing._id}" style="background: var(--neo-bg); border-radius: 50%; box-shadow: var(--shadow); color: var(--text-primary); width: 32px; height: 32px;">
                 <i class="fa-solid fa-heart"></i>
               </button>
             </div>
           </div>
-          <div class="card-details-info">
+          <div class="card-details-info" style="padding: 12px 16px;">
             <div class="card-details-title-row">
               <div class="card-details-title">${listing.title}</div>
               <div class="card-details-rating">
-                <i class="fa-solid fa-star text-danger"></i>
+                <i class="fa-solid fa-star neon-text-alt"></i>
                 <span>4.92</span>
               </div>
             </div>
             <div class="card-details-subtitle">${listing.location}, ${listing.country}</div>
             <div class="card-details-price">
-              <span class="price-normal"><strong>₹${priceFormatted}</strong> / night</span>
-              <span class="price-tax" style="display:none;"><strong>₹${taxPrice}</strong> total after tax</span>
+              <span class="price-normal" style="display: ${state.taxShown ? 'none' : 'inline'};"><strong>₹${priceFormatted}</strong> / night</span>
+              <span class="price-tax" style="display: ${state.taxShown ? 'inline' : 'none'};"><strong>₹${taxPrice}</strong> total after tax</span>
             </div>
           </div>
         </div>
@@ -1202,12 +1202,12 @@
     document.querySelectorAll('.password-eye-toggle').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        const input = btn.previousElementSibling;
+        const input = btn.parentElement.querySelector('input');
         const icon = btn.querySelector('i');
-        if (input.type === 'password') {
+        if (input && input.type === 'password') {
           input.type = 'text';
           icon.className = 'fa-regular fa-eye-slash';
-        } else {
+        } else if (input) {
           input.type = 'password';
           icon.className = 'fa-regular fa-eye';
         }

@@ -2,7 +2,7 @@
 
 <div class="row mt-4 mb-5">
   <div class="col-lg-8 offset-lg-2">
-    <div class="card p-4 p-md-5 border-0 shadow-sm" style="border-radius: var(--radius-lg); background: var(--background);">
+    <div class="neo-box p-4 p-md-5 border-0 shadow-sm" style="border-radius: var(--radius-lg); background: var(--background);">
       
       <!-- Wizard Title Header -->
       <div class="text-center mb-5">
@@ -30,14 +30,14 @@
           <h5 class="fw-bold mb-4 text-dark"><i class="fa-regular fa-file-lines text-danger me-2"></i>Step 1: Tell us about your place</h5>
           
           <div class="floating-label-block">
-            <input type="text" id="title" name="listing[title]" placeholder=" " required>
-            <label for="title">Catchy Property Title</label>
+            <input type="text" id="title" class="neo-input" name="listing[title]" placeholder=" " required>
+            <label for="title" style="margin-left: 15px; margin-top: 2px;">Catchy Property Title</label>
             <div class="invalid-feedback">Please enter a headline title for your listing.</div>
           </div>
           
           <div class="floating-label-block">
-            <textarea id="description" name="listing[description]" rows="5" placeholder=" " required></textarea>
-            <label for="description">Detailed Description</label>
+            <textarea id="description" name="listing[description]" rows="5" class="neo-input" placeholder=" " required></textarea>
+            <label for="description" style="margin-left: 15px; margin-top: 5px;">Detailed Description</label>
             <div class="invalid-feedback">A description explaining bedroom details, amenities, and surroundings is required.</div>
           </div>
         </div>
@@ -45,16 +45,16 @@
         <!-- STEP 2: PHOTOS UPLOAD -->
         <div class="wizard-form-step-panel">
           <h5 class="fw-bold mb-4 text-dark"><i class="fa-regular fa-image text-danger me-2"></i>Step 2: Add high-quality photos</h5>
-          <p class="text-muted small mb-3">Upload a bright cover photograph to make your property stand out in search grids.</p>
+          <p class="text-muted small mb-3">Upload up to 5 bright photographs to make your property stand out in search grids. The first photo will be your cover.</p>
           
           <div class="mb-4">
             <div class="image-preview-placeholder-box" id="imagePreviewPlaceholder" onclick="document.getElementById('image').click()">
-              <i class="fa-solid fa-cloud-arrow-up display-4 text-secondary mb-2"></i>
-              <h6 class="fw-bold mb-1">Click to upload a cover photo</h6>
-              <p class="text-muted small mb-0">PNG, JPG, or WEBP up to 5MB</p>
+              <i class="fa-solid fa-images display-4 text-secondary mb-2"></i>
+              <h6 class="fw-bold mb-1">Click to upload photos (Max 5)</h6>
+              <p class="text-muted small mb-0">PNG, JPG, or WEBP up to 5MB each</p>
             </div>
-            <input type="file" id="image" name="listing[image]" class="form-control d-none" required>
-            <div class="invalid-feedback mt-2">A listing cover photo is required.</div>
+            <input type="file" id="image" name="listing[image]" class="form-control d-none" required multiple accept="image/*">
+            <div class="invalid-feedback mt-2">At least one listing photo is required (up to 5 allowed).</div>
           </div>
         </div>
 
@@ -65,15 +65,15 @@
           <div class="row">
             <div class="col-md-6">
               <div class="floating-label-block">
-                <input type="text" id="location" name="listing[location]" placeholder=" " required>
-                <label for="location">City / State</label>
+                <input type="text" id="location" name="listing[location]" class="neo-input" placeholder=" " required>
+                <label for="location" style="margin-left: 15px; margin-top: 2px;">City / State</label>
                 <div class="invalid-feedback">Please provide your stay's city location.</div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="floating-label-block">
-                <input type="text" id="country" name="listing[country]" placeholder=" " required>
-                <label for="country">Country</label>
+                <input type="text" id="country" name="listing[country]" class="neo-input" placeholder=" " required>
+                <label for="country" style="margin-left: 15px; margin-top: 2px;">Country</label>
                 <div class="invalid-feedback">Please provide your stay's country.</div>
               </div>
             </div>
@@ -135,14 +135,14 @@
           <p class="text-muted small mb-3">Determine your pricing scale. You can adjust this fee according to peak seasons later.</p>
           
           <div class="floating-label-block">
-            <input type="number" id="price" name="listing[price]" placeholder=" " step="0.01" min="1" required>
-            <label for="price">Nightly rate (₹ INR)</label>
+            <input type="number" id="price" name="listing[price]" class="neo-input" placeholder=" " step="0.01" min="1" required>
+            <label for="price" style="margin-left: 15px; margin-top: 2px;">Nightly rate (₹ INR)</label>
             <div class="invalid-feedback">Please specify a valid nightly price.</div>
           </div>
 
           <div class="floating-label-block mt-3">
-            <input type="text" id="listingOffer" placeholder=" " autocomplete="off">
-            <label for="listingOffer">Special Offer or Discount (optional)</label>
+            <input type="text" id="listingOffer" class="neo-input" placeholder=" " autocomplete="off">
+            <label for="listingOffer" style="margin-left: 15px; margin-top: 2px;">Special Offer or Discount (optional)</label>
           </div>
         </div>
 
@@ -174,8 +174,8 @@
 
         <!-- Wizard Navigation Controls Footer -->
         <div class="wizard-footer-buttons">
-          <button type="button" class="btn wizard-back-btn" id="wizardPrevBtn">Back</button>
-          <button type="button" class="btn btn-dark wizard-next-btn" id="wizardNextBtn">Next Step</button>
+          <button type="button" class="neo-button wizard-back-btn" id="wizardPrevBtn" style="background: transparent !important; box-shadow: none !important;">Back</button>
+          <button type="button" class="neo-button wizard-next-btn" id="wizardNextBtn">Next Step</button>
         </div>
 
       </form>

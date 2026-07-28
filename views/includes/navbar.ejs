@@ -53,10 +53,11 @@
 
     <!-- Right: User Controls -->
     <div class="nav-right-actions">
-      <a href="/listings/new" class="host-badge-btn d-none d-lg-inline-block">
+      <a href="/listings/new" class="host-badge-btn neo-button d-none d-lg-inline-block me-2">
         Become a Host
       </a>
-      
+
+
       <!-- Notifications Bell Icon -->
       <div class="dropdown d-none d-md-inline-block">
         <button class="btn btn-link text-dark p-2 position-relative" id="notificationBtn" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 1.15rem; text-decoration: none;">
@@ -94,8 +95,7 @@
             <li><span class="dropdown-item-text text-muted fw-bold">Welcome, <%= currentUser.username %>!</span></li>
             <li><a class="dropdown-item" href="/listings/new">Create Listing</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/listings?view=guest-dashboard">Guest Dashboard</a></li>
-            <li><a class="dropdown-item" href="/listings?view=guest-dashboard&tab=wishlist"><i class="fa-regular fa-heart text-danger me-2"></i>Favorite Listings</a></li>
+            <li><a class="dropdown-item" href="/profile"><i class="fa-regular fa-user text-danger me-2"></i>My Profile & Favorites</a></li>
             <li><a class="dropdown-item" href="/listings?view=host-dashboard">Host Dashboard</a></li>
           <% } %>
           <li><a class="dropdown-item" href="/listings?view=ai-assistant"><i class="fa-solid fa-wand-magic-sparkles text-danger me-2"></i>AI Trip Planner</a></li>
@@ -117,9 +117,9 @@
       <i class="fa-solid fa-compass"></i>
       <span>Explore</span>
     </a>
-    <a href="/listings?view=guest-dashboard&tab=wishlist" class="mobile-nav-item" id="mobileTabWishlist">
+    <a href="/profile" class="mobile-nav-item" id="mobileTabWishlist">
       <i class="fa-regular fa-heart"></i>
-      <span>Wishlists</span>
+      <span>Favorites</span>
     </a>
     <a href="/listings?view=guest-dashboard&tab=trips" class="mobile-nav-item" id="mobileTabTrips">
       <i class="fa-solid fa-route"></i>
@@ -129,9 +129,9 @@
       <i class="fa-solid fa-wand-magic-sparkles"></i>
       <span>AI Planner</span>
     </a>
-    <a href="<%= currentUser ? '/listings?view=host-dashboard' : '/login' %>" class="mobile-nav-item" id="mobileTabProfile">
+    <a href="<%= currentUser ? '/profile' : '/login' %>" class="mobile-nav-item" id="mobileTabProfile">
       <i class="fa-regular fa-user"></i>
-      <span><%= currentUser ? 'Host Panel' : 'Profile' %></span>
+      <span>Profile</span>
     </a>
   </div>
 </div>

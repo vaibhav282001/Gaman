@@ -1,0 +1,57 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-5 pt-4">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h2 style="color: var(--neo-text-primary);" class="fw-bold">Welcome, <%= user.username %>!</h2>
+            <p style="color: var(--neo-text-secondary);">Here is your personal profile and favorite listings.</p>
+        </div>
+    </div>
+
+    <!-- Wishlist Section -->
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h4 style="color: var(--neo-text-primary);"><i class="fa-solid fa-heart text-danger me-2"></i> Your Favorite Stays</h4>
+            <hr style="border-color: var(--neo-shadow-dark);">
+        </div>
+
+        <% if (user.wishlist && user.wishlist.length > 0) { %>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                <% for (let listing of user.wishlist) { %>
+                    <div class="col">
+                        <a href="/listings/<%= listing._id %>" class="text-decoration-none">
+                            <div class="card neo-box h-100 border-0 overflow-hidden" style="border-radius: var(--radius-md);">
+                                <div class="position-relative">
+                                    <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 220px; object-fit: cover;">
+                                    <button class="wishlist-btn position-absolute top-0 end-0 m-3 border-0 bg-transparent" data-id="<%= listing._id %>" aria-label="Toggle Wishlist" onclick="event.preventDefault(); toggleWishlist('<%= listing._id %>', this)">
+                                        <!-- Wishlist Heart Logic -->
+                                        <div class="neo-box p-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: var(--neo-bg);">
+                                            <i class="fa-solid fa-heart" style="color: #ff385c; text-shadow: 0 0 10px rgba(255,56,92,0.4);"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="card-body p-3">
+                                    <h6 class="card-title text-truncate fw-bold mb-1" style="color: var(--neo-text-primary);"><%= listing.title %></h6>
+                                    <p class="card-text text-muted small mb-2 text-truncate" style="color: var(--neo-text-secondary) !important;">
+                                        <%= listing.location %>, <%= listing.country %>
+                                    </p>
+                                    <p class="card-text fw-semibold mb-0" style="color: var(--neo-text-primary);">
+                                        <span class="price-normal">&#8377; <%= listing.price.toLocaleString("en-IN") %> / night</span>
+                                        <span class="price-tax" style="display: none;">&#8377; <%= (listing.price * 1.18).toLocaleString("en-IN") %> / night</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+        <% } else { %>
+            <div class="col-12 text-center py-5 neo-box" style="border-radius: var(--radius-lg);">
+                <i class="fa-regular fa-heart mb-3" style="font-size: 3rem; color: var(--neo-text-secondary);"></i>
+                <h5 style="color: var(--neo-text-primary);">No favorites yet!</h5>
+                <p style="color: var(--neo-text-secondary);">Start exploring and click the heart icon to save your favorite stays.</p>
+                <a href="/listings" class="neo-button d-inline-block mt-3 text-decoration-none px-4 py-2">Explore Listings</a>
+            </div>
+        <% } %>
+    </div>
+</div>

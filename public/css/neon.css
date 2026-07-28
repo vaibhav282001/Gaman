@@ -1,0 +1,191 @@
+/* Neon Morphism Theme Variables */
+:root {
+  --neo-bg: #e0e5ec;
+  --neo-shadow-light: #ffffff;
+  --neo-shadow-dark: #a3b1c6;
+  --neon-accent-1: #0055ff;
+  --neon-accent-2: #ff2a7a;
+  --text-primary: #2d3748;
+  --text-secondary: #718096;
+  
+  /* Overriding old variables to fit new theme seamlessly */
+  --primary: var(--neon-accent-1);
+  --primary-hover: var(--neon-accent-2);
+  --background: var(--neo-bg);
+  --surface: var(--neo-bg);
+  --border: transparent;
+  --shadow: 9px 9px 16px var(--neo-shadow-dark), -9px -9px 16px var(--neo-shadow-light);
+  --shadow-hover: 12px 12px 20px var(--neo-shadow-dark), -12px -12px 20px var(--neo-shadow-light), 0 0 15px var(--neon-accent-1);
+}
+
+[data-theme="dark"] {
+  --neo-bg: #131419;
+  --neo-shadow-light: #1c1e26;
+  --neo-shadow-dark: #0a0a0c;
+  --neon-accent-1: #00f3ff;
+  --neon-accent-2: #ff00ff;
+  --text-primary: #e2e8f0;
+  --text-secondary: #a0aec0;
+  
+  --primary: var(--neon-accent-1);
+  --background: var(--neo-bg);
+  --surface: var(--neo-bg);
+  --border: transparent;
+  --shadow: 9px 9px 16px var(--neo-shadow-dark), -9px -9px 16px var(--neo-shadow-light);
+  --shadow-hover: 12px 12px 20px var(--neo-shadow-dark), -12px -12px 20px var(--neo-shadow-light), 0 0 15px var(--neon-accent-1);
+}
+
+body {
+  background-color: var(--neo-bg) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Neomorphic Utility Classes */
+.neo-box {
+  background: var(--neo-bg) !important;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  border: none !important;
+  overflow: hidden;
+}
+
+.neo-box:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.neo-inset {
+  background: var(--neo-bg);
+  box-shadow: inset 6px 6px 12px var(--neo-shadow-dark), inset -6px -6px 12px var(--neo-shadow-light);
+  border-radius: 12px;
+}
+
+.neo-button {
+  background: var(--neo-bg) !important;
+  border: none !important;
+  border-radius: 50px;
+  padding: 10px 24px;
+  color: var(--text-primary) !important;
+  font-weight: 600;
+  box-shadow: 6px 6px 12px var(--neo-shadow-dark), -6px -6px 12px var(--neo-shadow-light) !important;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.neo-button:hover {
+  box-shadow: 6px 6px 12px var(--neo-shadow-dark), -6px -6px 12px var(--neo-shadow-light), 0 0 15px var(--neon-accent-1) !important;
+  color: var(--neon-accent-1) !important;
+}
+
+.neo-button:active {
+  box-shadow: inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light) !important;
+}
+
+.neo-input {
+  background: var(--neo-bg) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 14px 20px;
+  color: var(--text-primary) !important;
+  box-shadow: inset 5px 5px 10px var(--neo-shadow-dark), inset -5px -5px 10px var(--neo-shadow-light) !important;
+  width: 100%;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.neo-input:focus {
+  box-shadow: inset 5px 5px 10px var(--neo-shadow-dark), inset -5px -5px 10px var(--neo-shadow-light), 0 0 10px var(--neon-accent-2) !important;
+}
+
+.neon-text {
+  color: var(--neon-accent-1);
+  text-shadow: 0 0 5px var(--neon-accent-1), 0 0 10px var(--neon-accent-1);
+}
+
+.neon-text-alt {
+  color: var(--neon-accent-2);
+  text-shadow: 0 0 5px var(--neon-accent-2), 0 0 10px var(--neon-accent-2);
+}
+
+/* Overrides for existing components */
+.navbar-airbnb {
+  background-color: var(--neo-bg) !important;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
+  border-bottom: none !important;
+}
+[data-theme="dark"] .navbar-airbnb {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3) !important;
+}
+
+.search-pill-wrapper {
+  background: var(--neo-bg) !important;
+  border: none !important;
+  box-shadow: var(--shadow) !important;
+}
+.search-pill-wrapper:hover {
+  box-shadow: var(--shadow-hover) !important;
+}
+.search-pill-icon {
+  background: var(--neon-accent-1) !important;
+  box-shadow: 0 0 10px var(--neon-accent-1);
+}
+
+.listing-card-modern .card-media-slider {
+  border-radius: 20px 20px 0 0 !important;
+}
+
+.card-details-title, .card-details-price, .card-details-rating {
+    color: var(--text-primary) !important;
+}
+.card-details-subtitle {
+    color: var(--text-secondary) !important;
+}
+
+.wishlist-heart-btn.active {
+  color: var(--neon-accent-2) !important;
+  text-shadow: 0 0 15px var(--neon-accent-2) !important;
+}
+
+.profile-dropdown-btn {
+  background: var(--neo-bg) !important;
+  border: none !important;
+  box-shadow: var(--shadow) !important;
+}
+.profile-dropdown-menu {
+  background: var(--neo-bg) !important;
+  box-shadow: var(--shadow) !important;
+  border: none !important;
+}
+.dropdown-item {
+  color: var(--text-primary) !important;
+}
+.dropdown-item:hover {
+  background: var(--surface) !important;
+  color: var(--neon-accent-1) !important;
+  text-shadow: 0 0 5px var(--neon-accent-1);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+}
+.theme-toggle-btn:hover {
+  color: var(--neon-accent-1);
+  box-shadow: var(--shadow-hover);
+}
